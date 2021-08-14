@@ -1,0 +1,19 @@
+Hibernate is a framework for persisting/saving java objects in a database.
+It provides object to relational mapping
+Hibernate uses JDBC for all database communications
+Hibernate sets another layer of abstraction on JDBC
+
+Development process 
+1.Add Hibernate config file (tells hibernate how to connect to Database)
+2.Annotate Java Class
+3.Develope java code to perform db operations
+
+Dialect in Hibernate – Dialect is a class and a bridge between Java JDBC types and SQL types, 
+  which contains mapping between java language data type and database datatype. 
+  Dialect allows Hibernate to generate SQL optimized for a particular relational database.
+  Hibernate generates queries for the specific database based on the Dialect class.
+  Use following property to set mySql dialect..e.g mysql
+          <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+
+  
