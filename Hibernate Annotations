@@ -1,0 +1,101 @@
+The Java Persistence API (JPA) is a specification of Java. 
+It is used to persist data between Java object and relational database. 
+JPA acts as a bridge between object-oriented domain models and relational database systems.
+As JPA is just a specification, it doesn't perform any operation by itself.
+It requires an implementation. So, ORM tools like Hibernate implements JPA specifications for data persistence.
+
+
+Entity Class--->Java class mapped to db table
+
+Step1.Map a class to db table 
+Step2. map fields to db column
+@Entity
+@Table(name="student"){
+  @Id---primary key
+  @Column(name="id")
+  private int id;
+
+  @Column
+  private String first_name;
+}
+
+Generating database tables -
+drop and recreate the db schema on startup
+<property name="hbm2ddl.auto">create</property>
+It means schema DDL created every time when session object is created
+another value 'update'
+
+///Creating and Saving java object
+Class                  Description
+SessionFactory       Reads the hibernate config file ,Creates Session objects.It is heavy weight object so only create once in your app;
+
+Session.            Wraps a JDBC connection.Main object to save/retrieve objects .Short lived object,Retrieved from SessionFactory
+
+code snippet
+// create session factory
+		SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(Student.class)
+				.buildSessionFactory();
+
+		// create session
+		Session session = factory.getCurrentSession();
+
+		// use session object to save Java object
+		try {
+			// create student object
+			Student student = new Student("amol", "Darekar", "amol@hmail.com");
+
+			// start a transaction
+			session.beginTransaction();
+
+			// save the student object
+			session.save(student);
+			// commit transaction
+			session.getTransaction().commit();
+		} finally {
+			factory.close();
+		}
+    
+    
+    ///Primary keys-uniquely identify a row in a table
+    can not contain null
+    Specify strategy for generating Primary key
+    
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    
+GenerationType.AUTO---->The GenerationType.AUTO indicates that the persistence provider should select an appropriate strategy based on
+the specified database dialect. The AUTO will automatically set the generated values. It is the default GenerationType. 
+If no strategy is defined, it will consider AUTO by default. All the databases support this strategy.
+
+GenerationType.IDENTITY--->The GenerationType.IDENTITY indicates that the persistence provider must assign primary keys for the entities using
+a database identity column. It is very similar to AUTO generationType. This strategy is not available in all the databases. 
+If the particular database doesn’t support IDENTITY generationtype, the persistence provider will itself choose an alternative strategy.
+
+GenerationType.SEQUENCE--->The GenerationType.SEQUENCE indicates that the persistence provider must assign primary keys for the entities using
+the database sequence. This strategy consists of two parts, defining a sequence name and using the sequence name in the classes. 
+It also builds a sequence generator in the database and not supported by all the databases. 
+A SEQUENCE GenerationType is global to the application; it can be accessed by one or more entities in the application.
+
+GenerationType.TABLE--->The GenerationType.TABLE indicates that the persistence provider must assign primary keys for the entities using a database table. 
+It uses a database table to store the latest primary key value. 
+This strategy is available in all the databases.
+
+How to change auto increment values?
+--alter table tablename AUTO_INCREMENT=3000;
+
+
+///Reading objects using Hibernate
+metthod session.get(classname,primary key)
+if object is not there it returns null
+
+to get list of objects
+session.createQuery("from student").getResultList()
+
+///Update Objects Using Hibernate
+retrieve the object
+call setters
+commit transaction
+
+///delete objects
+1.get object using session.get()
+2.session.delete(object)
+3.commit transaction
