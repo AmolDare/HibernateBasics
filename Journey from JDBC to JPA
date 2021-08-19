@@ -1,0 +1,39 @@
+Spring JDBC Overview
+ -it provides JdbcTemplate template api which wraps all jdbc operations for you.
+ -you can call .query,update etc method on it
+ -to map resultset to particular java object you have to write customized rowmapper class
+  e.g.
+  class PersonRowMapper implements RowMapper<Person>{
+
+		@Override
+		public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Person person=new Person();
+			person.setId(rs.getInt("id"));
+			person.setName(rs.getString("name"));
+			person.setLocation(rs.getString("location"));
+			person.setBirthDate(rs.getTimestamp("birth_date"));
+			
+			return person;
+		}
+		
+	}
+  
+  Methods of EntityManager
+    public <T> T find(Class<T> entityClass, Object primaryKey);-->Search for an entity of the specified class and primary key.
+  public <T> T merge(T entity);-->Merge the state of the given entity into the current persistence context.
+  public void persist(Object entity);-->Make an instance managed and persistent.
+   public void remove(Object entity);-->Remove the entity instance.
+   public <T> T find(Class<T> entityClass, Object primaryKey, ---->Find by primary key, using the specified properties
+                      Map<String, Object> properties);
+                      
+   public void flush();--->Synchronize the persistence context to the underlying database.        
+    public void detach(Object entity);--->Remove the given entity from the persistence context, causing
+     * a managed entity to become detached.  Unflushed changes made 
+     * to the entity if any (including removal of the entity), 
+     * will not be synchronized to the database.  Entities which 
+     * previously referenced the detached entity will continue to
+     * reference it.
+     
+  public Query createNativeQuery(String sqlString);--->Create an instance of <code>Query</code> for executing
+     * a native SQL statement, e.g., for update or delete.
+   
